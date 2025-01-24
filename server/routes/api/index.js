@@ -1,10 +1,8 @@
+const passport=require('passport')
 const express= require('express');
 const router = express.Router();
-const TransactionController = require('../../controllers/TransactionController')
-// Fetch all transactions
-router.get('/transactions',TransactionController.getAllTransactions);
-router.get('/transactions/school/:id',TransactionController.getAllSchoolTransactions);
-router.get('/transactions/custom-order-id/:id',TransactionController.getTransactionStatusByCustomOrderID);
 
+router.use('/transactions',require('./transactions'));
+router.use('/user', require('./user'))
 
 module.exports = router;

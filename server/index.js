@@ -2,6 +2,10 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const dotenv = require('dotenv');
+const passport = require('passport');
+const passportJWT = require("./config/passport-jwt-strategy")
+
+const TransactionController = require('./controllers/TransactionController.js')
 dotenv.config();
 
 const db = require('./config/mongoose.js');
@@ -22,8 +26,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.post('/transactions/webhook/status-update', TransactionController.webhookController)
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(passport.initialize());
+
 
 app.use('/', require('./routes'))
 

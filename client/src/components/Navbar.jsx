@@ -17,6 +17,12 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '../features/authSlice'
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import { toggleMode } from '../features/userSlice';
+import { setSearchQuery } from '../features/userSlice';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -59,6 +65,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export function Navbar() {
+  const dispatch = useDispatch()
+  const { userDetails, searchQuery, isLightMode } = useSelector((state) => state.user)
   const navigate = useNavigate();
   const location = useLocation();
   const fullPath = location.pathname;
@@ -104,7 +112,7 @@ export function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
+      <MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>
     </Menu>
   );
 
@@ -125,98 +133,141 @@ export function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
+
+      {
+      lastSegment != ''
+        &&
+        <MenuItem onClick={() => { navigate('/') }}>
+          <p>Home</p>
+        </MenuItem>
+        }
+      {
+        lastSegment != 'search-by-school'
+        &&
+        <MenuItem  onClick={() => { navigate('/search-by-school'), handleMenuClose(); }}>
+          <p>Search By School</p>
+        </MenuItem>
+      }
+      {
+        lastSegment != 'check-status'
+        &&
+        <MenuItem  onClick={() => { navigate('/check-status') , handleMenuClose();}}>
+          <p>Check Status</p>
+        </MenuItem>
+      }
+      {
+        isLightMode
+          ?
+          <MenuItem onClick={() => dispatch(toggleMode())} >
+            <IconButton  size="large" sx={{ margin:'0px 10px',backgroundColor: 'whitesmoke', color: 'black', width: '28px', height: '28px' }} ><DarkModeIcon /></IconButton>
+            <p>Toggle</p>
+          </MenuItem>
+          :
+          <MenuItem onClick={() => dispatch(toggleMode())}>
+           <IconButton  size="large" sx={{margin:'0px 10px', backgroundColor: 'black', color: 'white', width: '28px', height: '28px' }} ><LightModeIcon /></IconButton>
+           <p>Toggle</p>
+          </MenuItem>
+      }
+      {
+        userDetails
+          ?
+          <MenuItem onClick={handleProfileMenuOpen}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="primary-search-account-menu"
+              aria-haspopup="true"
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <p>Profile</p>
+          </MenuItem>
+          :
+          <MenuItem onClick={() => navigate('/sign-in')}>
+            <p>Login</p>
+          </MenuItem>
+      }
     </Menu>
   );
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="static" sx={{ backgroundColor: '#a248f7' }}>
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            MUI
-          </Typography>
-          {
-            lastSegment == 'search-by-school'
-              ?
-              null
-              :
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search(Collect ID...)"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-          }
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            {
-              lastSegment == 'search-by-school'
-                ?
-                <Button size="small" onClick={() => { navigate('/') }} sx={{ color: 'white', border: '1px solid whitesmoke' }}>Home</Button>
-                :
-                <Button size='small' onClick={() => { navigate('/search-by-school') }} sx={{ color: 'white', border: '1px solid whitesmoke' }}>Search By School</Button>
-            }
-             <Button size='small' onClick={() => { navigate('/check-status') }} sx={{ marginLeft:'10px',color: 'white', border: '1px solid whitesmoke' }}>Check Status</Button>
-            <IconButton
-              size="medium"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ display: { xs: 'none', sm: 'block' } }}
             >
-              <AccountCircle />
-            </IconButton>
+              STMS
+            </Typography>
+            {
+              lastSegment != 'check-status'
+                ?
+                <Search>
+                  <SearchIconWrapper>
+                    <SearchIcon />
+                  </SearchIconWrapper>
+                  <StyledInputBase
+                    placeholder="Search(Collect ID...)"
+                    inputProps={{ 'aria-label': 'search' }}
+                    value={searchQuery}
+                    onChange={(event) => { dispatch(setSearchQuery(event.target.value)) }}
+                  />
+                </Search>
+                :
+                null
+            }
+          </Box>
+          <Box sx={{ flexGrow: 1 }}>
+
+          </Box>
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}>
+            {lastSegment != ''
+              &&
+              <Button variant="outlined" size="small" onClick={() => { navigate('/') }} sx={{ marginLeft: '10px', textTransform: "capitalize", color: '#29388c', borderColor: '#29388c', fontSize: '12px', fontWeight: '600', marginRight: '8px' }}>Home</Button>
+            }
+            {
+              lastSegment != 'search-by-school'
+              &&
+              <Button variant="outlined" size="small" onClick={() => { navigate('/search-by-school') }} sx={{ marginLeft: '10px', textTransform: "capitalize", color: '#29388c', borderColor: '#29388c', fontSize: '12px', fontWeight: '600', marginRight: '8px' }}>Search By School</Button>
+            }
+            {
+              lastSegment != 'check-status'
+              &&
+              <Button variant="outlined" size="small" onClick={() => { navigate('/check-status') }} sx={{ marginLeft: '10px', textTransform: "capitalize", color: '#29388c', borderColor: '#29388c', fontSize: '12px', fontWeight: '600', marginRight: '8px' }}>Check Status</Button>
+            }
+            {
+              isLightMode
+                ?
+                <IconButton sx={{ backgroundColor: 'whitesmoke', color: 'black', width: '28px', height: '28px' }} onClick={() => dispatch(toggleMode())}><DarkModeIcon /></IconButton>
+                :
+                <IconButton sx={{ backgroundColor: 'black', color: 'white', width: '28px', height: '28px' }} onClick={() => dispatch(toggleMode())}><LightModeIcon /></IconButton>
+            }
+            {
+              userDetails
+                ?
+                <IconButton
+                  size="large"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle sx={{ width: '30px', height: '30px' }} />
+                </IconButton>
+                :
+                <Button variant="contained" size="small"
+                  onClick={() => navigate('/sign-in')}
+                  sx={{ marginLeft: '10px', textTransform: "capitalize", color: 'whitesmoke', borderColor: '#29388c', fontSize: '12px', fontWeight: '600', marginRight: '8px' }}>
+                  Login
+                </Button>}
+
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton

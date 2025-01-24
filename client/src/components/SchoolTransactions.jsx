@@ -7,6 +7,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import IconButton from '@mui/material/IconButton';
 import { styled, alpha } from '@mui/material/styles';
 import { red } from '@mui/material/colors';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { setSearchQuery } from '../features/userSlice';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -52,25 +55,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export const SchoolTransactions = () => {
+    const dispatch= useDispatch()
+    const { isLightMode, searchQuery } = useSelector((state) => state.user)
     const [schoolTransactions, setSchoolTransactions] = useState([]);
-    const [searchedSchoolId, setSearchedSchoolId]= useState("");
+    const [searchedSchoolId, setSearchedSchoolId] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const handleSearchSchoolTransactions = async ()=>{
-        console.log('handleSearchSchoolTransactions clicked : '+ searchedSchoolId)
+    const handleSearchSchoolTransactions = async () => {
         const response = await fetch(`http://localhost:8000/api/transactions/school/${searchedSchoolId}`);
-        const data =await response.json();
-        console.log('Searched School Transactions  : '+ JSON.stringify(data))
+        const data = await response.json();
         setSchoolTransactions(data);
         setSearchedSchoolId("")
     }
+    const SearchedTransactions = schoolTransactions.filter((trxn) =>
+        trxn.collect_id._id.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      useEffect(()=>{
+         return () => {
+              dispatch(setSearchQuery(""));
+            };
+      },[dispatch])
     return (
         <Box >
-            <Navbar />
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }} >
                 <Box sx={{ width: { xs: '100vw', md: '95vw' }, border: '1px solid grey', margin: '15px 2px' }}>
                     <Box sx={{ padding: '0px 5px', margin: '10px 0px', display: 'flex', justifyContent: 'space-between' }}>
-                        <Typography variant='h5'>Search by School Id :</Typography>
+                        <Typography variant='h5' sx={{color : isLightMode? 'black' :'white'}}>Search by School Id :</Typography>
                         <Box sx={{ display: 'flex' }}>
                             <Search>
                                 <SearchIconWrapper>
@@ -80,42 +90,44 @@ export const SchoolTransactions = () => {
                                     placeholder="Type School ID..."
                                     inputProps={{ 'aria-label': 'search' }}
                                     value={searchedSchoolId}
-                                    onChange={(e)=>setSearchedSchoolId(e.target.value)}
+                                    onChange={(e) => setSearchedSchoolId(e.target.value)}
                                 />
                             </Search>
                             <Button size='small' onClick={handleSearchSchoolTransactions} sx={{ backgroundColor: 'lightblue', borderLeft: '1px solid white', color: 'blue', textTransform: 'capitalize', borderTopLeftRadius: '0px', borderBottomLeftRadius: '0px' }}>Search</Button>
                         </Box>
                     </Box>
-                    <Divider sx={{ width: '100%' }} />
+                    <Divider sx={{ width: '100%', borderColor : isLightMode? "grey" :'white' }} />
                     <Box >
                         <Table>
                             <TableHead>
-                                <TableRow>
-                                    <TableCell>Collect ID</TableCell>
-                                    <TableCell>School ID</TableCell>
-                                    <TableCell>Gateway</TableCell>
-                                    <TableCell>Order Amount</TableCell>
-                                    <TableCell>Transaction Amount</TableCell>
-                                    <TableCell>Status</TableCell>
-                                    <TableCell>Custom Order ID</TableCell>
+                                <TableRow >
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>S.NO.</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Collect ID</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>School ID</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Gateway</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Order Amount</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Transaction AMT.</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Status</TableCell>
+                                    <TableCell sx={{ fontWeight: '700', fontSize: '15px', color: isLightMode ? 'black' : 'white' }}>Custom Order ID</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {schoolTransactions.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((txn, index) => (
+                                {SearchedTransactions.slice(page * rowsPerPage, (page + 1) * rowsPerPage).map((txn, index) => (
                                     <TableRow key={index}>
-                                        <TableCell>{txn.collect_id}</TableCell>
-                                        <TableCell>{txn.collect_request_data[0].school_id}</TableCell>
-                                        <TableCell>{txn.gateway}</TableCell>
-                                        <TableCell>{txn.collect_request_data[0].order_amount}</TableCell>
-                                        <TableCell>{txn.transaction_amount}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{index+1}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.collect_id._id}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.collect_id.school_id}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.gateway}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.collect_id.order_amount}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.transaction_amount}</TableCell>
                                         <TableCell sx={{ color: txn.status == 'SUCCESS' ? 'green' : 'orange' }}>{txn.status}</TableCell>
-                                        <TableCell>{txn.collect_request_data[0].custom_order_id}</TableCell>
+                                        <TableCell sx={{ fontSize: '13px', color: isLightMode ? 'black' : 'whitesmoke' }}>{txn.collect_id.custom_order_id}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
-                        <Box sx={{ display: schoolTransactions.length > 0 ? 'none' : 'flex', justifyContent: 'center',marginTop:'15px', width: '100%' }}>
-                            <Typography variant='h6' >Please Search a School !</Typography>
+                        <Box sx={{ display: schoolTransactions.length > 0 ? 'none' : 'flex', justifyContent: 'center', marginTop: '15px', width: '100%' }}>
+                            <Typography variant='h6' sx={{color:isLightMode ? 'black' : 'white'}}>Please Search a School !</Typography>
                         </Box>
                         <TablePagination
                             component="div"
@@ -124,6 +136,7 @@ export const SchoolTransactions = () => {
                             page={page}
                             onPageChange={(event, newPage) => setPage(newPage)}
                             onRowsPerPageChange={(e) => setRowsPerPage(parseInt(e.target.value, 10))}
+                            sx={{ backgroundColor: isLightMode ? 'white' : 'black', color: isLightMode ? 'black' : 'whitesmoke' }}
                         />
                     </Box>
                 </Box>
