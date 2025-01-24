@@ -9,6 +9,7 @@ import Layout from './components/Layout'
 import { setNavigate } from './utils/navigationService';
 import { useEffect } from 'react'
 import {Rehydrate} from './components/RehydrateUser'
+import { UserProfile } from './components/UserPage'
 
 function App() {
   const navigate= useNavigate();
@@ -24,6 +25,7 @@ function App() {
       <Route path="/sign-in" element={<SignIn />} />
       <Route path='/' element={<Layout/>} >
         <Route path="/" element={<HomePage />} />
+        <Route path="/user-profile" element={<UserProfile />} />
         <Route path="/search-by-school" element={<SchoolTransactions />} />
         <Route path="/check-status" element={<CheckStatus />} />
       </Route>

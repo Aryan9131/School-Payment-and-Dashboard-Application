@@ -111,7 +111,7 @@ export function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={()=>{navigate('/user-profile'), handleMenuClose()}}>Profile</MenuItem>
       <MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>
     </Menu>
   );
