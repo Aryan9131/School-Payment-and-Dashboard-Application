@@ -37,7 +37,7 @@ module.exports.createSession = async function (req, res) {
         }
         return res.status(200).json({
             message: "SignIn successful !",
-            token: jwt.sign(user.toJSON(), "School_Transaction_management_System", { expiresIn: "1d" })
+            token: jwt.sign(user.toJSON(), process.env.SECRET_KEY, { expiresIn: "1d" })
             
         })
     } catch (error) {

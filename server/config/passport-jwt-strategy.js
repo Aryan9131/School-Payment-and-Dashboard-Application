@@ -8,7 +8,7 @@ dotenv.config();
 
 const ops={
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-    secretOrKey : "School_Transaction_management_System"
+    secretOrKey : process.env.SECRET_KEY
 }
 
 passport.use(new PassportJWT(ops, async function(jwt_payload, done){
