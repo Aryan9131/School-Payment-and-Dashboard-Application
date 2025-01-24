@@ -26,7 +26,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.post('/transactions/webhook/status-update', TransactionController.webhookController)
+app.post('api/transactions/webhook/status-update', TransactionController.webhookController)
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
