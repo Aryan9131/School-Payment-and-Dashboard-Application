@@ -5,12 +5,12 @@ import { useSelector } from 'react-redux'
 export const UserProfile = () => {
     const {userDetails} = useSelector((state)=>state.user)
   return (
-    <Box sx={{width:'90vw',height:'40vh' , backgroundColor:'whitesmoke'}}>
-        <Box sx={{width:'60%', height:'90%', backgroundColor:'white'}}>
-        <Typography>name : {userDetails.name}</Typography>
-        <Typography>email : {userDetails.email}</Typography>
-        <Typography>number : {userDetails.number}</Typography>
-        <Typography>password : {userDetails.password}</Typography>
+    <Box sx={{width:'100vw',height:'100vh' , backgroundColor:'whitesmoke', display:'flex',alignItems:'center', justifyContent:'center'}}>
+        <Box sx={{width:{xs:'90%', sm:'60%', md:'50%'}, height:'50%', backgroundColor:'white', padding:'10px'}}>
+        <Typography>Name : {userDetails.name}</Typography>
+        <Typography>Email : {userDetails.email}</Typography>
+        <Typography>Number : {userDetails.number}</Typography>
+        <Typography>Password : {userDetails.password}</Typography>
         </Box>
     </Box>
   )
