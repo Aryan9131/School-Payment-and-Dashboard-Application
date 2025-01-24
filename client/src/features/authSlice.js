@@ -13,7 +13,7 @@ const initialState = {
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
     async ({ email, password }, { dispatch }) => {
-        const loginUserResponse = await fetch(`http://localhost:8000/api/user/create-session`, {
+        const loginUserResponse = await fetch(`https://school-payment-and-dashboard-application.onrender.com/api/user/create-session`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Header keys should be quoted, not the object itself
@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
 
 // Sign Up
 export const registerUser = createAsyncThunk("auth/registerUser", async ({ email, password, name, number }) => {
-    const createUserResponse = await fetch(`http://localhost:8000/api/user/register-user`, {
+    const createUserResponse = await fetch(`https://school-payment-and-dashboard-application.onrender.com/api/user/register-user`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', // Header keys should be quoted, not the object itself

@@ -10,7 +10,7 @@ export const Rehydrate = ({ children }) => {
   useEffect(() => {
     if (token) {
       const fetchUser = async () => {
-        const fetchedUserResponse = await fetch('http://localhost:8000/api/user/get-user', {
+        const fetchedUserResponse = await fetch('https://school-payment-and-dashboard-application.onrender.com/api/user/get-user', {
           method: "GET",
           headers: {
             'content-type': 'application/json',

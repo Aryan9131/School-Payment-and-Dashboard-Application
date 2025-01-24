@@ -63,7 +63,7 @@ export const CheckStatus = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const handleCheckTransactionStatus = async () => {
-        const response = await fetch(`http://localhost:8000/api/transactions/custom-order-id/${searchedCustomOrderId}`);
+        const response = await fetch(`https://school-payment-and-dashboard-application.onrender.com/api/transactions/custom-order-id/${searchedCustomOrderId}`);
         const data = await response.json();
         setSearchedTrasaction(data);
         setStatus(data.status)
@@ -76,7 +76,7 @@ export const CheckStatus = () => {
             ...state,
             status: status
         }))
-        const response = await fetch(`http://localhost:8000/api/transactions/update-status/${searchedTrasaction._id}`, {
+        const response = await fetch(`https://school-payment-and-dashboard-application.onrender.com/api/transactions/update-status/${searchedTrasaction._id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Header keys should be quoted, not the object itself

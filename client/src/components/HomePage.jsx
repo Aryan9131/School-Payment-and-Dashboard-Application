@@ -15,7 +15,7 @@ export const HomePage = () => {
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      const response = await fetch('http://localhost:8000/api/transactions');
+      const response = await fetch('https://school-payment-and-dashboard-application.onrender.com/api/transactions');
       const data = await response.json();
       setTransactions(data);
       setFilteredTransactions(data);

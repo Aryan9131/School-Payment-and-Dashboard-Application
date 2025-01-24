@@ -62,7 +62,7 @@ export const SchoolTransactions = () => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const handleSearchSchoolTransactions = async () => {
-        const response = await fetch(`http://localhost:8000/api/transactions/school/${searchedSchoolId}`);
+        const response = await fetch(`https://school-payment-and-dashboard-application.onrender.com/api/transactions/school/${searchedSchoolId}`);
         const data = await response.json();
         setSchoolTransactions(data);
         setSearchedSchoolId("")

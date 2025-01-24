@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 8000;
 // Enable CORS
 const corsOptions = {
   origin: [
-    'https://digital-gram-panchayat-services-frontend.vercel.app',
+    'https://school-payment-and-dashboard-application-three.vercel.app',
     'http://localhost:5173'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
